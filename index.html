@@ -280,7 +280,8 @@ button.note{min-height:40px}
 }
 
 /* bottom bar */
-#bottom{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;align-items:center;justify-content:space-around;min-height:76px;padding:0 max(6px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(6px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1.5px solid var(--ink)}
+.hist-btn{position:absolute;top:0;right:4px;z-index:2;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:var(--paper);box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+#bottom{position:fixed;left:0;right:0;bottom:0;z-index:15;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-items:center;min-height:76px;padding:0 max(6px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(6px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1.5px solid var(--ink)}
 .nv{min-width:50px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;padding:0;font-size:10.5px;font-weight:700;color:var(--soft)}
 .nv.on{font-weight:800;color:var(--deeper)}
 .nv-add{width:62px;height:62px;margin-top:-30px;border:0;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 var(--rose)}
@@ -512,10 +513,10 @@ body:not(.mv) #v-moving,body.mv .view:not(#v-moving),body.mv #foot{display:none}
 <nav id="bottom" class="only-phone" aria-label="Sections">
   <button type="button" class="nv" data-act="view" data-view="home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg>home</button>
   <button type="button" class="nv" id="nav-moving" data-act="view" data-view="moving" hidden><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path><path d="M4 13h16"></path></svg>moving</button>
-  <button type="button" class="nv" data-act="view" data-view="checks"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21z"></path><path d="M9 8h6M9 12h6M9 16h4"></path></svg>receipts</button>
+  <button type="button" class="nv" id="nav-history" data-act="view" data-view="history"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>history</button>
   <button type="button" class="nv-add" data-act="view" data-view="add" aria-label="Add expense"><svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+  <button type="button" class="nv" data-act="view" data-view="checks"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21z"></path><path d="M9 8h6M9 12h6M9 16h4"></path></svg>receipts</button>
   <button type="button" class="nv" data-act="view" data-view="jars"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8"></path><path d="M9 3v3.5C6.5 7.5 5 9.6 5 12v6a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-6c0-2.4-1.5-4.5-4-5.5V3"></path></svg>jars</button>
-  <button type="button" class="nv" data-act="view" data-view="history"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>history</button>
 </nav>
 
 <dialog id="editor" aria-labelledby="ed-title">
@@ -814,6 +815,7 @@ function renderTabs(){
     return `<button type="button" class="tab${on?' on':''}" aria-pressed="${on}" data-act="pick" data-key="${k}">${MONTHS_EN[monthIdx(k)].slice(0,3)} <small>${k.slice(2,4)}</small></button>`;
   }).join('')+(state.moving?`<button type="button" class="tab mv-tab${mv?' on':''}" aria-pressed="${mv}" data-act="view" data-view="moving">moving</button>`:'');
   $('nav-moving').hidden=!state.moving;
+  $('nav-history').hidden=!!state.moving;
 }
 function renderHero(m,s,key){
   const now=currentKey();
@@ -829,6 +831,7 @@ function renderHero(m,s,key){
     <span class="deco only-desk" style="top:34px;left:47%">${ICON.sparkle('--butter',30)}</span>
     <span class="deco only-desk" style="bottom:24px;left:54%">${ICON.sparkle('--plan',18)}</span>
     <svg class="deco only-desk" aria-hidden="true" width="44" height="40" viewBox="0 0 24 22" style="top:46%;left:3%;transform:rotate(-14deg)"><path d="${ICON.heart}" style="fill:var(--plan)"></path></svg>
+    <button type="button" class="hist-btn only-phone" data-act="view" data-view="history" aria-label="History"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></button>
     <div class="hero-l">
       <div>
         <p class="eyebrow only-desk">budget dashboard · ${e.getFullYear()}</p>
@@ -1199,7 +1202,8 @@ function setView(v){
   if(state.status==='ready') renderTabs();
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='v-'+v));
   $('add').classList.toggle('active',v==='add');
-  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  const tab=v==='history'&&state.moving?'home':v;
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('on',b.dataset.view===tab));
   window.scrollTo(0,0);
   if(v==='add'){const c=$('chat');c.scrollTop=c.scrollHeight;}
 }
